@@ -90,8 +90,33 @@ function removeSong(id) {
 
 
 function addSong(title, album, artist, duration, id) {
+  if ( player.songs.some( (song) => song.id === id) ) throw "ID already taken"; 
+  let maxId = 0;
+   player.songs.forEach((song) => {
+    maxId = Math.max(song.id,maxId);     
+   })
+  console.log(player)
+  durationArr = duration.split(":");
+  minDuration = Number(durationArr[0])*60;
+  secDuration = Number(durationArr[1]);
+
   
+  player.songs = [
+    ...player.songs,
+    {
+      id: id ?? maxId + 1,
+      title : title,
+      album : album,
+      artist : artist,
+      duration : minDuration + secDuration,
+
+
+    }
+  
+  ];
+  console.log(player)
 }
+// addSong("pipi","kaki","yotam hamelech",23423423423,10);
 
 function removePlaylist(id) {
   // your code here
