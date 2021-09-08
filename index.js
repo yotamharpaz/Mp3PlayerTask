@@ -79,10 +79,10 @@ function playSong(id) {
 function removeSong(id) {
   if ( !player.songs.some( (song) => song.id === id) ) throw "non-existent ID";
   player.songs = player.songs.filter( (song) => song.id !== id);
-  player.playlists = player.playlists.map((playList) => {
+  player.playlists = player.playlists.map((playlist) => {
     return {
-      ...playList,
-      songs: playList.songs.filter((song) => song !== id)
+      ...playlist,
+      songs: playlist.songs.filter((song) => song !== id)
     };
 
   });
@@ -95,33 +95,34 @@ function addSong(title, album, artist, duration, id) {
    player.songs.forEach((song) => {
     maxId = Math.max(song.id,maxId);     
    })
-  console.log(player)
+  // console.log(duration)
   durationArr = duration.split(":");
   minDuration = Number(durationArr[0])*60;
   secDuration = Number(durationArr[1]);
 
-  
+  const newId = id ?? maxId + 1;
   player.songs = [
     ...player.songs,
     {
-      id: id ?? maxId + 1,
+      id: newId,
       title : title,
       album : album,
       artist : artist,
       duration : minDuration + secDuration,
-
-
     }
-  
   ];
-  console.log(player)
+  // console.log(player)
+  return newId;
 }
-// addSong("pipi","kaki","yotam hamelech",23423423423,10);
+// addSong("pipi","kaki","yotam hamelech","10:35");
 
 function removePlaylist(id) {
-  // your code here
+  console.log(player.playlists);
+  if ( !player.playlists.some( (playlist) => playlist.id === id) ) throw "non-existent ID";
+  player.playlists = player.playlists.filter( (playlist) => playlist.id !== id);
+  console.log(player.playlists);
 }
-
+removePlaylist(1);
 function createPlaylist(name, id) {
   // your code here
 }
