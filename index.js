@@ -117,14 +117,25 @@ function addSong(title, album, artist, duration, id) {
 // addSong("pipi","kaki","yotam hamelech","10:35");
 
 function removePlaylist(id) {
-  console.log(player.playlists);
   if ( !player.playlists.some( (playlist) => playlist.id === id) ) throw "non-existent ID";
   player.playlists = player.playlists.filter( (playlist) => playlist.id !== id);
-  console.log(player.playlists);
 }
-removePlaylist(1);
+
 function createPlaylist(name, id) {
-  // your code here
+  if ( player.playlists.some( (playlist) => playlist.id === id) ) throw "ID already taken"; 
+  let maxId = 0;
+  player.playlists.forEach((playlist) => {
+    maxId = Math.max(playlist.id,maxId);})
+    const newId = id ?? maxId + 1;
+  player.playlists = [
+    ...player.playlists,
+    {
+      id: newId,
+      name : name,
+      songs : []
+    }
+  ];
+  return newId;
 }
 
 function playPlaylist(id) {
