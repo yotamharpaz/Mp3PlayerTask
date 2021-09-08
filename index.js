@@ -1,3 +1,4 @@
+const { existsTypeAnnotation } = require("@babel/types");
 
 const player = {
   songs: [
@@ -46,13 +47,20 @@ const player = {
   ],
   playlists: [
     { id: 1, name: 'Metal', songs: [1, 7, 4] },
-    { id: 5, name: 'Israeli', songs: [4, 5] },
+    { id: 5, name: 'Israeli', songs: [4 , 5] },
   ],
   playSong(song) {
     console.log(`Playing ${song.title} from ${song.album} by ${song.artist} | ${durationFormat(song.duration)}.`)
   },
 }
 
+ function throwIfNoPlaylist(id){  
+   if ( !player.playlists.some( (playlist) => playlist.id === id) ) throw "non-existent ID";
+ }
+ function throwIfNoSong(id){
+  if ( !player.songs.some( (song) => song.id === id) ) throw "non-existent ID";
+ }
+ 
 function durationFormat (secDuration) {
 
   let seconds = secDuration % 60;
@@ -77,7 +85,7 @@ function playSong(id) {
 
 
 function removeSong(id) {
-  if ( !player.songs.some( (song) => song.id === id) ) throw "non-existent ID";
+  throwIfNoSong(id)
   player.songs = player.songs.filter( (song) => song.id !== id);
   player.playlists = player.playlists.map((playlist) => {
     return {
@@ -117,8 +125,16 @@ function addSong(title, album, artist, duration, id) {
 
 
 function removePlaylist(id) {
-  if ( !player.playlists.some( (playlist) => playlist.id === id) ) throw "non-existent ID";
-  player.playlists = player.playlists.filter( (playlist) => playlist.id !== id);
+  throwIfNoPlaylist(id);
+  console.log("Hey1");
+  // player.playlists = player.playlists.filter( (playlist) => playlist.id !== id);
+  let newPlaylists = [];
+  player.playlists.forEach( (playlist) => {
+    if  (playlist.id !== id) {
+      newPlaylists.append(playlist);
+    }
+  })
+  player.playlists = newPlaylists;
 }
 
 function createPlaylist(name, id) {
@@ -139,18 +155,36 @@ function createPlaylist(name, id) {
 }
 
 function playPlaylist(id) {
-  // check if id exists 
-  if(!player.playlists.some((playlist) => playlist.id === id)) throw "ID does not exist";
-  player.playlists.find((playlist) => playlist.id === id).songs.forEach((songId) => playSong(songId))
-
-  
-  // find the right playlist
-  // playSong() for each song in the playlist by order
+  throwIfNoPlaylist(id);
+  player.playlists.find((playlist) => playlist.id === id).songs.forEach((songId) => playSong(songId));
 }
-playPlaylist(1)
+
 
 function editPlaylist(playlistId, songId) {
-  // your code here
+  throwIfNoPlaylist(playlistId);
+  throwIfNoSong(songId);
+  const playlist = player.playlists.find((playlist) => playlist.id === playlistId)
+  if (playlist.songs.some((song) => song === songId) ) {
+    if (playlist.songs.length === 1) {
+      removePlaylist(playlistId);
+    }else {
+      //removes the song from the playlist
+      player.playlists = [
+        ...player.playlists.filter((playlist)=>(playlist.id !== playlistId)),
+        {
+          ...playlist,
+          songs: playlist.songs.filter((song) => song !== songId),
+        },
+      ]
+    }
+  }else{
+    playlist.songs.push(songId);
+
+  }
+  /*gets the right playlist
+  checks if song id exists
+  if it is dekets it if its the last song delets the playlist
+  if not ads new song to playlist*/
 }
 
 function playlistDuration(id) {
