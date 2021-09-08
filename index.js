@@ -111,10 +111,10 @@ function addSong(title, album, artist, duration, id) {
       duration : minDuration + secDuration,
     }
   ];
-  // console.log(player)
+  
   return newId;
 }
-// addSong("pipi","kaki","yotam hamelech","10:35");
+
 
 function removePlaylist(id) {
   if ( !player.playlists.some( (playlist) => playlist.id === id) ) throw "non-existent ID";
@@ -139,8 +139,15 @@ function createPlaylist(name, id) {
 }
 
 function playPlaylist(id) {
-  // your code here
+  // check if id exists 
+  if(!player.playlists.some((playlist) => playlist.id === id)) throw "ID does not exist";
+  player.playlists.find((playlist) => playlist.id === id).songs.forEach((songId) => playSong(songId))
+
+  
+  // find the right playlist
+  // playSong() for each song in the playlist by order
 }
+playPlaylist(1)
 
 function editPlaylist(playlistId, songId) {
   // your code here
