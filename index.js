@@ -1,3 +1,4 @@
+
 const player = {
   songs: [
     {
@@ -48,13 +49,31 @@ const player = {
     { id: 5, name: 'Israeli', songs: [4, 5] },
   ],
   playSong(song) {
-    console.log(/* your code here */)
+    console.log(`Playing ${song.title} from ${song.album} by ${song.artist} | ${durationFormat(song.duration)}.`)
   },
 }
 
-function playSong(id) {
-  // your code here
+function durationFormat (secDuration) {
+
+  let seconds = secDuration % 60;
+  const fomatedSec = seconds.toString().length === 1 ? "0" + secends : seconds;
+
+  let minutes = Math.floor(secDuration / 60);
+  const fomatedMin = minutes.toString().length === 1 ? "0" + minutes : minutes;
+
+  return (fomatedMin + ":" + fomatedSec);
 }
+
+function playSong(id) {
+  try {
+    let song = player.songs.find((e) => e.id === id);
+    player.playSong(song);
+  }catch{console.log("non-existent ID");
+
+  }
+  
+}
+durationFormat(100);
 
 function removeSong(id) {
   // your code here
@@ -105,3 +124,5 @@ module.exports = {
   searchByQuery,
   searchByDuration,
 }
+
+
