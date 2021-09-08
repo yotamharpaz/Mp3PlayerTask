@@ -75,11 +75,13 @@ function playSong(id) {
   throw "non-existent ID"
 }
 
-// playSong(159);
-function removeSong(id) {
-  // your code here
-}
 
+function removeSong(id) {
+  player.songs = player.songs.filter( (song) => song.id !== id);
+}
+console.log(player)
+removeSong(2)
+console.log(player)
 function addSong(title, album, artist, duration, id) {
   // your code here
 }
