@@ -56,7 +56,7 @@ const player = {
 function durationFormat (secDuration) {
 
   let seconds = secDuration % 60;
-  const fomatedSec = seconds.toString().length === 1 ? "0" + secends : seconds;
+  const fomatedSec = seconds.toString().length === 1 ? "0" + seconds : seconds;
 
   let minutes = Math.floor(secDuration / 60);
   const fomatedMin = minutes.toString().length === 1 ? "0" + minutes : minutes;
@@ -65,16 +65,17 @@ function durationFormat (secDuration) {
 }
 
 function playSong(id) {
-  try {
-    let song = player.songs.find((e) => e.id === id);
-    player.playSong(song);
-  }catch{console.log("non-existent ID");
-
+  for (i = 0; i < player.songs.length; i++) {
+    const song = player.songs[i];
+    if (song.id === id){ 
+      player.playSong(song);
+      return
+    }
   }
-  
+  throw "non-existent ID"
 }
-durationFormat(100);
 
+// playSong(159);
 function removeSong(id) {
   // your code here
 }
