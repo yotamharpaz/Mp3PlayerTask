@@ -77,7 +77,7 @@ function playSong(id) {
 
 
 function removeSong(id) {
-  if(!player.songs.some((song)=>song.id === id)) throw "non-existent ID";
+  if ( !player.songs.some( (song) => song.id === id) ) throw "non-existent ID";
   player.songs = player.songs.filter( (song) => song.id !== id);
   player.playlists = player.playlists.map((playList) => {
     return {
@@ -90,7 +90,7 @@ function removeSong(id) {
 
 
 function addSong(title, album, artist, duration, id) {
-  // your code here
+  
 }
 
 function removePlaylist(id) {
