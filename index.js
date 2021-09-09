@@ -162,10 +162,6 @@ function playPlaylist(id) {
 
 
 function editPlaylist(playlistId, songId) {
-  /*gets the right playlist
-  checks if song id exists
-  if it is dekets it if its the last song delets the playlist
-  if not ads new song to playlist*/
   throwIfNoPlaylist(playlistId);
   throwIfNoSong(songId);
   const playlist = player.playlists.find((playlist) => playlist.id === playlistId)
