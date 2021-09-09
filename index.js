@@ -54,6 +54,13 @@ const player = {
   },
 }
 
+function parseDuration(duration){
+  const durationArr = duration.split(":");
+  const minDuration = Number(durationArr[0])*60;
+  const secDuration = Number(durationArr[1]);
+  return minDuration + secDuration;
+}
+
  function throwIfNoPlaylist(id){  
    if ( !player.playlists.some( (playlist) => playlist.id === id) ) throw "non-existent ID";
  }
@@ -103,10 +110,6 @@ function addSong(title, album, artist, duration, id) {
    player.songs.forEach((song) => {
     maxId = Math.max(song.id,maxId);     
    })
-  // console.log(duration)
-  durationArr = duration.split(":");
-  minDuration = Number(durationArr[0])*60;
-  secDuration = Number(durationArr[1]);
 
   const newId = id ?? maxId + 1;
   player.songs = [
@@ -116,7 +119,7 @@ function addSong(title, album, artist, duration, id) {
       title : title,
       album : album,
       artist : artist,
-      duration : minDuration + secDuration,
+      duration : parseDuration(duration) ,
     }
   ];
   
@@ -126,8 +129,6 @@ function addSong(title, album, artist, duration, id) {
 
 function removePlaylist(id) {
   throwIfNoPlaylist(id);
-  console.log("Hey1");
-  // player.playlists = player.playlists.filter( (playlist) => playlist.id !== id);
   let newPlaylists = [];
   player.playlists.forEach( (playlist) => {
     if  (playlist.id !== id) {
@@ -161,6 +162,10 @@ function playPlaylist(id) {
 
 
 function editPlaylist(playlistId, songId) {
+  /*gets the right playlist
+  checks if song id exists
+  if it is dekets it if its the last song delets the playlist
+  if not ads new song to playlist*/
   throwIfNoPlaylist(playlistId);
   throwIfNoSong(songId);
   const playlist = player.playlists.find((playlist) => playlist.id === playlistId)
@@ -178,25 +183,53 @@ function editPlaylist(playlistId, songId) {
       ]
     }
   }else{
+  }
     playlist.songs.push(songId);
 
   }
-  /*gets the right playlist
-  checks if song id exists
-  if it is dekets it if its the last song delets the playlist
-  if not ads new song to playlist*/
-}
 
 function playlistDuration(id) {
-  // your code here
+  let duration = 0
+  const playlist =  player.playlists.find( (playlist) => playlist.id === id);
+  playlist.songs.forEach((songId) =>{
+    duration += player.songs.find((song) => song.id === songId).duration
+
+  })
+   return duration;
 }
 
 function searchByQuery(query) {
-  // your code here
+  let newQuery = query.toLowerCase()
+  let songs = player.songs.filter((song) => song.title.toLowerCase().includes(newQuery)
+  ||song.artist.toLowerCase().includes(newQuery)
+  ||song.album.toLowerCase().includes(newQuery));
+  songs.sort((song1,song2) => song1.title > song2.title ? 1 : -1);
+
+  let playlists = player.playlists.filter((playlist) => playlist.name.toLowerCase().includes(newQuery))
+  playlists.sort((playlist1,playlist2) => playlist1.name > playlist2.name ? 1 : -1);
+  return {songs : songs , playlists : playlists }
 }
 
 function searchByDuration(duration) {
-  // your code here
+  const targetDuration = parseDuration(duration);
+  let bestFit ;
+  let minDelta = Infinity;
+  player.songs.forEach((song) => {
+    if(Math.abs(song.duration - targetDuration) < minDelta){
+      bestFit = song;
+      minDelta = Math.abs(song.duration - targetDuration);
+    }
+  }
+  )
+  player.playlists.forEach((playlist) => {
+    const dur = Math.abs(playlistDuration(playlist.id) - targetDuration);
+    if(dur < minDelta){
+      bestFit = playlist;
+      minDelta = Math.abs(dur);
+    }
+    }
+  )
+  return bestFit;
 }
 
 module.exports = {
