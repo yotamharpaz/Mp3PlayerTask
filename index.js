@@ -169,7 +169,6 @@ function editPlaylist(playlistId, songId) {
     if (playlist.songs.length === 1) {
       removePlaylist(playlistId);
     }else {
-      //removes the song from the playlist
       player.playlists = [
         ...player.playlists.filter((playlist)=>(playlist.id !== playlistId)),
         {
@@ -215,7 +214,7 @@ function searchByDuration(duration) {
       bestFit = song;
       minDelta = Math.abs(song.duration - targetDuration);
     }
-  }
+  } 
   )
   player.playlists.forEach((playlist) => {
     const dur = Math.abs(playlistDuration(playlist.id) - targetDuration);
